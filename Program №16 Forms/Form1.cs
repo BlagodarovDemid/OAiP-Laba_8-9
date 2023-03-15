@@ -155,22 +155,35 @@ namespace Program__16_Forms
         }
         private void SelectingPerformingOperation(Operator op)
         {
-            if (op.symbolOperator == 'R')
+            if (op.symbolOperator == 'C')
             {
-                this.figure = new Rectangle
+                this.figure = new Circle
                 (int.Parse(Convert.ToString(operands.Pop().value)),
                 int.Parse(Convert.ToString(operands.Pop().value)),
-                int.Parse(Convert.ToString(operands.Pop().value)),
                 int.Parse(Convert.ToString(operands.Pop().value)));
+                //int.Parse(Convert.ToString(operands.Pop().value)));
                 //Convert.ToString(operands.Pop().value));
-                op = new Operator(this.figure.Draw, 'R'); 
+                op = new Operator(this.figure.Draw, 'C'); 
                 ShapeContainer.AddFigure(figure);
                 listBox2.Items.Add(figure);
                 op.operatorMethod();
             }
+            if (op.symbolOperator == 'M')
+            {
+                this.figure.MoveTo(int.Parse(Convert.ToString(operands.Pop().value)),int.Parse(Convert.ToString(operands.Pop().value)));
+            }
+            if (op.symbolOperator == 'D')
+            {
+                DeleteF(figure, true);
+                listBox2.Items.RemoveAt(listBox2.SelectedIndex);
+                listBox2.ResetText();
+                listBox2.Update();
+                op.operatorMethod();
+            }
         }
-        private void textBox5_TextChanged(object sender, EventArgs e, KeyEventArgs a)
+        private void textBox5_TextChanged(object sender, EventArgs e)
         {
+            //textBox5.KeyUp += textBox5_KeyDown;
             for (int i = 0; i < textBox5.Text.Length; i++)
             {
                 if (IsNotOperation(textBox5.Text[i]))
@@ -192,15 +205,28 @@ namespace Program__16_Forms
                             flag = false;
                             continue;
                         }
-                        else if ((textBox5.Text[i + 1] == ','
-                                || textBox5.Text[i + 1] == ')')
-                                && !(Char.IsDigit(textBox5.Text[i - 1])))
-                                {
-                                    this.operands.Push(new Operand(int.Parse(Convert.ToString(textBox5.Text[i]))));
-                                    continue;
-                                }
+                        else
+                        if ((textBox5.Text[i + 1] == ',' || textBox5.Text[i + 1] == ')') && !(Char.IsDigit(textBox5.Text[i - 1])))
+                        {
+                            this.operands.Push(new Operand(int.Parse(Convert.ToString(textBox5.Text[i]))));
+                            continue;
+                        }
                     }
-                    else if (textBox5.Text[i] == 'R')
+                    else if (textBox5.Text[i] == 'C')
+                    {
+                        if (this.operators.Count == 0)
+                        {
+                            this.operators.Push(OperatorContainer.FindOperator(textBox5.Text[i]));
+                        }
+                    }
+                    else if (textBox5.Text[i] == 'M')
+                    {
+                        if (this.operators.Count == 0)
+                        {
+                            this.operators.Push(OperatorContainer.FindOperator(textBox5.Text[i]));
+                        }
+                    }
+                    else if (textBox5.Text[i] == 'D')
                     {
                         if (this.operators.Count == 0)
                         {
@@ -236,17 +262,86 @@ namespace Program__16_Forms
                         MessageBox.Show("Введенной операции не существует");
                     }
                 }
-
             }
-            if (a.KeyCode == Keys.Enter)
+        }
+        private void textBox5_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
             {
                 try
                 {
                     //выполняется обработка входной строки
+                    for (int i = 0; i < textBox5.Text.Length; i++)
+                    {
+                        if (IsNotOperation(textBox5.Text[i]))
+                        {
+                            if (!(Char.IsDigit(textBox5.Text[i])))
+                            {
+                                this.operands.Push(new Operand(textBox5.Text[i]));
+                                continue;
+                            }
+                            else if (Char.IsDigit(textBox5.Text[i]))
+                            {
+                                if (Char.IsDigit(textBox5.Text[i + 1]))
+                                {
+                                    if (flag)
+                                    {
+                                        this.operands.Push(new Operand(textBox5.Text[i]));
+                                    }
+                                    this.operands.Push(new Operand(int.Parse(Convert.ToString(this.operands.Pop().value)) * 10 + int.Parse(Convert.ToString(textBox5.Text[i + 1]))));
+                                    flag = false;
+                                    continue;
+                                }
+                                else if ((textBox5.Text[i + 1] == ','
+                                        || textBox5.Text[i + 1] == ')')
+                                        && !(Char.IsDigit(textBox5.Text[i - 1])))
+                                {
+                                    this.operands.Push(new Operand(int.Parse(Convert.ToString(textBox5.Text[i]))));
+                                    continue;
+                                }
+                            }
+                            else if (textBox5.Text[i] == 'R')
+                            {
+                                if (this.operators.Count == 0)
+                                {
+                                    this.operators.Push(OperatorContainer.FindOperator(textBox5.Text[i]));
+                                }
+                            }
+                            else if (textBox5.Text[i] == '(')
+                            {
+                                this.operators.Push(OperatorContainer.FindOperator(textBox5.Text[i]));
+                            }
+                            else if (textBox5.Text[i] == ')')
+                            {
+                                do
+                                {
+                                    if (operators.Peek().symbolOperator == '(')
+                                    {
+                                        operators.Pop();
+                                        break;
+                                    }
+                                    if (operators.Count == 0)
+                                    {
+                                        break;
+                                    }
+                                }
+                                while (operators.Peek().symbolOperator != '(');
+                            }
+                            if (operators.Peek() != null)
+                            {
+                                this.SelectingPerformingOperation(operators.Peek());
+                            }
+                            else
+                            {
+                                MessageBox.Show("Введенной операции не существует");
+                            }
+                        }
+                    }
                 }
                 catch
                 {
                     //добавляется информация о некорректной команде в историю команд
+
                 }
                 textBox5.Text = "";
             }
