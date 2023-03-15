@@ -53,7 +53,203 @@ namespace Program__16_Forms
             Init.bitmap = bitmap;
             Init.pictureBox = pictureBox1;
             Init.pen = pen;
+            label1.Visible = false;
+            label2.Visible = false;
+            label3.Visible = false;
+            label4.Visible = false;
+            textBox1.Visible = false;
+            textBox2.Visible = false;
+            textBox3.Visible = false;
+            textBox4.Visible = false;
+            button1.Visible = false;
+            button2.Visible = false;
+            button3.Visible = false;
+            button6.Visible = false;
             button5.Visible = false;
+            label5.Visible = false;
+            comboBox1.Visible = false;
+            listBox1.Visible = false;
+        }
+
+
+
+        public class Operand
+	    {
+        	public object value;
+            public Operand(object NewValue)
+	        {
+        	    this.value = NewValue;
+            }
+        }
+        public class OperatorMethod
+	    {
+        	public delegate void EmptyOperatorMethod();
+	        public delegate void UnaryOperatorMethod(object operand);
+	        public delegate void BinaryOperatorMethod(object operand1, object operand2);
+	        public delegate void TrinaryOperatorMethod(object operand1, object operand2, object operand3);
+	    }
+        public class Operator : OperatorMethod
+        {
+            public char symbolOperator;
+            public EmptyOperatorMethod operatorMethod = null;
+            public BinaryOperatorMethod binaryOperator = null;
+            public TrinaryOperatorMethod trinaryOperator = null;
+            public Operator(EmptyOperatorMethod operatorMethod, char symbolOperator)
+            {
+                this.operatorMethod = operatorMethod;
+                this.symbolOperator = symbolOperator;
+            }
+            public Operator(BinaryOperatorMethod binaryOperator, char symbolOperator)
+            {
+                this.binaryOperator = binaryOperator;
+                this.symbolOperator = symbolOperator;
+            }
+            public Operator(TrinaryOperatorMethod trinaryOperator, char symbolOperator)
+            {
+                this.trinaryOperator = trinaryOperator;
+                this.symbolOperator = symbolOperator;
+            }
+            public Operator(char symbolOperator)
+            {
+                this.symbolOperator = symbolOperator;
+            }
+        }
+        public static class OperatorContainer
+        {
+            public static List<Operator> operators = new List<Operator>();
+            static OperatorContainer()
+            {
+                operators.Add(new Operator('S'));
+                operators.Add(new Operator('R'));
+                operators.Add(new Operator('E'));
+                operators.Add(new Operator('C'));
+                operators.Add(new Operator('M'));
+                operators.Add(new Operator(','));
+                operators.Add(new Operator('('));
+                operators.Add(new Operator(')'));
+            }
+            public static Operator FindOperator(char s)
+            {
+                foreach (Operator op in operators)
+                {
+                    if (op.symbolOperator == s)
+                    {
+                        return op;
+                    }
+                }
+                return null;
+            }
+        }
+        private Stack<Operator> operators = new Stack<Operator>();
+        private Stack<Operand> operands = new Stack<Operand>();
+        private bool IsNotOperation(char item)
+        {
+            if (!(item == 'R' || item == 'M' || item == 'E' || item == 'C' || item == 'S' || item == ',' || item == '(' || item == ')'))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        private void SelectingPerformingOperation(Operator op)
+        {
+            if (op.symbolOperator == 'R')
+            {
+                this.figure = new Rectangle
+                (int.Parse(Convert.ToString(operands.Pop().value)),
+                int.Parse(Convert.ToString(operands.Pop().value)),
+                int.Parse(Convert.ToString(operands.Pop().value)),
+                int.Parse(Convert.ToString(operands.Pop().value)));
+                //Convert.ToString(operands.Pop().value));
+                op = new Operator(this.figure.Draw, 'R'); 
+                ShapeContainer.AddFigure(figure);
+                listBox2.Items.Add(figure);
+                op.operatorMethod();
+            }
+        }
+        private void textBox5_TextChanged(object sender, EventArgs e, KeyEventArgs a)
+        {
+            for (int i = 0; i < textBox5.Text.Length; i++)
+            {
+                if (IsNotOperation(textBox5.Text[i]))
+                {
+                    if (!(Char.IsDigit(textBox5.Text[i])))
+                    {
+                        this.operands.Push(new Operand(textBox5.Text[i]));
+                        continue;
+                    }
+                    else if (Char.IsDigit(textBox5.Text[i]))
+                    {
+                        if (Char.IsDigit(textBox5.Text[i + 1]))
+                        {
+                            if (flag)
+                            {
+                                this.operands.Push(new Operand(textBox5.Text[i]));
+                            }
+                            this.operands.Push(new Operand(int.Parse(Convert.ToString(this.operands.Pop().value)) * 10 + int.Parse(Convert.ToString(textBox5.Text[i + 1]))));
+                            flag = false;
+                            continue;
+                        }
+                        else if ((textBox5.Text[i + 1] == ','
+                                || textBox5.Text[i + 1] == ')')
+                                && !(Char.IsDigit(textBox5.Text[i - 1])))
+                                {
+                                    this.operands.Push(new Operand(int.Parse(Convert.ToString(textBox5.Text[i]))));
+                                    continue;
+                                }
+                    }
+                    else if (textBox5.Text[i] == 'R')
+                    {
+                        if (this.operators.Count == 0)
+                        {
+                            this.operators.Push(OperatorContainer.FindOperator(textBox5.Text[i]));
+                        }
+                    }
+                    else if (textBox5.Text[i] == '(')
+                    {
+                        this.operators.Push(OperatorContainer.FindOperator(textBox5.Text[i]));
+                    }
+                    else if (textBox5.Text[i] == ')')
+                    {
+                        do
+                        {
+                            if (operators.Peek().symbolOperator == '(')
+                            {
+                                operators.Pop();
+                                break;
+                            }
+                            if (operators.Count == 0)
+                            {
+                                break;
+                            }
+                        }
+                        while (operators.Peek().symbolOperator != '(');
+                    }
+                    if (operators.Peek() != null)
+                    {
+                        this.SelectingPerformingOperation(operators.Peek());
+                    }
+                    else
+                    {
+                        MessageBox.Show("Введенной операции не существует");
+                    }
+                }
+
+            }
+            if (a.KeyCode == Keys.Enter)
+            {
+                try
+                {
+                    //выполняется обработка входной строки
+                }
+                catch
+                {
+                    //добавляется информация о некорректной команде в историю команд
+                }
+                textBox5.Text = "";
+            }
         }
 
         public void Clear()
@@ -435,6 +631,7 @@ namespace Program__16_Forms
                 }
             }
         }
+
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (comboBox1.SelectedIndex == 0)
@@ -606,6 +803,54 @@ namespace Program__16_Forms
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButton1.Checked == true)
+            {
+                label1.Visible = false;
+                label2.Visible = false;
+                label3.Visible = false;
+                label4.Visible = false;
+                textBox1.Visible = false;
+                textBox2.Visible = false;
+                textBox3.Visible = false;
+                textBox4.Visible = false;
+                button1.Visible = false;
+                button2.Visible = false;
+                button3.Visible = false;
+                button6.Visible = false;
+                button5.Visible = false;
+                label5.Visible = false;
+                comboBox1.Visible = false;
+                listBox1.Visible = false;
+
+                listBox2.Visible = true;
+                textBox5.Visible = true;
+            }
+        }
+
+        private void radioButton2_CheckedChanged(object sender, EventArgs e)
+        {
+            label1.Visible = true;
+            label2.Visible = true;
+            label3.Visible = true;
+            label4.Visible = true;
+            textBox1.Visible = true;
+            textBox2.Visible = true;
+            textBox3.Visible = true;
+            textBox4.Visible = true;
+            button1.Visible = true;
+            button2.Visible = true;
+            button3.Visible = true;
+            button6.Visible = true;
+            button5.Visible = true;
+            label5.Visible = true;
+            comboBox1.Visible = true;
+
+            listBox1.Visible = true;
+            textBox5.Visible = false;
         }
     }
 }

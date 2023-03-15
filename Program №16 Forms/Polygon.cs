@@ -15,7 +15,7 @@ using System.Runtime.InteropServices.ComTypes;
 namespace Program__16_Forms
 {
 
-        internal class Polygon : Figure
+    internal class Polygon : Figure
         {
             public PointF[] pointFs;
 
