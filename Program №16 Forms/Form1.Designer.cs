@@ -56,7 +56,7 @@
             // 
             this.pictureBox1.BackColor = System.Drawing.Color.White;
             this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox1.Location = new System.Drawing.Point(17, 40);
+            this.pictureBox1.Location = new System.Drawing.Point(13, 23);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(1066, 615);
@@ -66,7 +66,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(1231, 164);
+            this.button1.Location = new System.Drawing.Point(1231, 162);
             this.button1.Margin = new System.Windows.Forms.Padding(4);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(113, 28);
@@ -117,7 +117,7 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(1231, 271);
+            this.button3.Location = new System.Drawing.Point(1231, 269);
             this.button3.Margin = new System.Windows.Forms.Padding(4);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(113, 28);
@@ -128,7 +128,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(1231, 200);
+            this.button2.Location = new System.Drawing.Point(1231, 198);
             this.button2.Margin = new System.Windows.Forms.Padding(4);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(113, 28);
@@ -148,7 +148,7 @@
             "Polygon",
             "Triangle",
             "ID Figure"});
-            this.comboBox1.Location = new System.Drawing.Point(935, 17);
+            this.comboBox1.Location = new System.Drawing.Point(931, 23);
             this.comboBox1.Margin = new System.Windows.Forms.Padding(4);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(148, 24);
@@ -159,16 +159,18 @@
             // 
             this.listBox1.FormattingEnabled = true;
             this.listBox1.ItemHeight = 16;
+            this.listBox1.Items.AddRange(new object[] {
+            ""});
             this.listBox1.Location = new System.Drawing.Point(1231, 40);
             this.listBox1.Margin = new System.Windows.Forms.Padding(4);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(136, 116);
+            this.listBox1.Size = new System.Drawing.Size(151, 116);
             this.listBox1.TabIndex = 10;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(1088, 20);
+            this.label1.Location = new System.Drawing.Point(1088, 23);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(15, 16);
@@ -177,7 +179,7 @@
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(1231, 236);
+            this.button5.Location = new System.Drawing.Point(1231, 234);
             this.button5.Margin = new System.Windows.Forms.Padding(4);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(113, 28);
@@ -189,7 +191,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(1088, 126);
+            this.label3.Location = new System.Drawing.Point(1088, 129);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(20, 16);
@@ -199,7 +201,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(1088, 179);
+            this.label4.Location = new System.Drawing.Point(1088, 181);
             this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(17, 16);
@@ -209,7 +211,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(1088, 73);
+            this.label2.Location = new System.Drawing.Point(1088, 76);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(16, 16);
@@ -226,7 +228,7 @@
             // 
             // button6
             // 
-            this.button6.Location = new System.Drawing.Point(1231, 306);
+            this.button6.Location = new System.Drawing.Point(1231, 304);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(113, 29);
             this.button6.TabIndex = 21;
@@ -237,9 +239,9 @@
             // radioButton1
             // 
             this.radioButton1.AutoSize = true;
-            this.radioButton1.BackColor = System.Drawing.Color.White;
+            this.radioButton1.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.radioButton1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.radioButton1.Location = new System.Drawing.Point(17, 42);
+            this.radioButton1.Location = new System.Drawing.Point(13, 4);
             this.radioButton1.Name = "radioButton1";
             this.radioButton1.Size = new System.Drawing.Size(156, 20);
             this.radioButton1.TabIndex = 22;
@@ -251,8 +253,9 @@
             // radioButton2
             // 
             this.radioButton2.AutoSize = true;
-            this.radioButton2.BackColor = System.Drawing.SystemColors.Window;
-            this.radioButton2.Location = new System.Drawing.Point(17, 59);
+            this.radioButton2.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.radioButton2.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.radioButton2.Location = new System.Drawing.Point(184, 4);
             this.radioButton2.Name = "radioButton2";
             this.radioButton2.Size = new System.Drawing.Size(126, 20);
             this.radioButton2.TabIndex = 23;
@@ -265,19 +268,21 @@
             // 
             this.textBox5.BackColor = System.Drawing.SystemColors.InfoText;
             this.textBox5.ForeColor = System.Drawing.Color.Lime;
-            this.textBox5.Location = new System.Drawing.Point(17, 19);
+            this.textBox5.Location = new System.Drawing.Point(12, 23);
             this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(919, 22);
+            this.textBox5.Size = new System.Drawing.Size(1066, 22);
             this.textBox5.TabIndex = 24;
-            this.textBox5.TextChanged += new System.EventHandler(this.textBox5_TextChanged);
+            this.textBox5.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox5_KeyDown);
             // 
             // listBox2
             // 
             this.listBox2.FormattingEnabled = true;
             this.listBox2.ItemHeight = 16;
+            this.listBox2.Items.AddRange(new object[] {
+            ""});
             this.listBox2.Location = new System.Drawing.Point(1091, 39);
             this.listBox2.Name = "listBox2";
-            this.listBox2.Size = new System.Drawing.Size(276, 116);
+            this.listBox2.Size = new System.Drawing.Size(291, 116);
             this.listBox2.TabIndex = 25;
             // 
             // Form1
@@ -285,8 +290,8 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.ClientSize = new System.Drawing.Size(1372, 663);
-            this.Controls.Add(this.textBox5);
+            this.ClientSize = new System.Drawing.Size(1385, 663);
+            this.Controls.Add(this.textBox3);
             this.Controls.Add(this.radioButton2);
             this.Controls.Add(this.radioButton1);
             this.Controls.Add(this.button6);
@@ -296,17 +301,17 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.listBox1);
-            this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.textBox4);
-            this.Controls.Add(this.textBox3);
             this.Controls.Add(this.textBox2);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.button1);
+            this.Controls.Add(this.comboBox1);
+            this.Controls.Add(this.textBox5);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.listBox2);
+            this.Controls.Add(this.listBox1);
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Form1";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;

@@ -16,7 +16,7 @@ namespace Pain
         public int y;
         public int w;
         public int h;
-        //public string name;
+        public string name;
         abstract public void Draw();
         abstract public void MoveTo(int x, int y);
     }

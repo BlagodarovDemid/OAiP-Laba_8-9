@@ -72,7 +72,6 @@ namespace Program__16_Forms
         }
 
 
-
         public class Operand
 	    {
         	public object value;
@@ -119,11 +118,11 @@ namespace Program__16_Forms
             public static List<Operator> operators = new List<Operator>();
             static OperatorContainer()
             {
-                operators.Add(new Operator('S'));
-                operators.Add(new Operator('R'));
-                operators.Add(new Operator('E'));
                 operators.Add(new Operator('C'));
                 operators.Add(new Operator('M'));
+                operators.Add(new Operator('D'));
+                operators.Add(new Operator('R'));
+                operators.Add(new Operator('E'));
                 operators.Add(new Operator(','));
                 operators.Add(new Operator('('));
                 operators.Add(new Operator(')'));
@@ -144,7 +143,7 @@ namespace Program__16_Forms
         private Stack<Operand> operands = new Stack<Operand>();
         private bool IsNotOperation(char item)
         {
-            if (!(item == 'R' || item == 'M' || item == 'E' || item == 'C' || item == 'S' || item == ',' || item == '(' || item == ')'))
+            if (!(item == 'C' || item == 'M' || item == 'D' || item == ',' || item == '(' || item == ')'))
             {
                 return true;
             }
@@ -153,24 +152,28 @@ namespace Program__16_Forms
                 return false;
             }
         }
+        public int ConvertStringToInt(object c)
+        {
+            return Convert.ToInt32(Convert.ToString(c));
+        }
         private void SelectingPerformingOperation(Operator op)
         {
             if (op.symbolOperator == 'C')
             {
-                this.figure = new Circle
-                (int.Parse(Convert.ToString(operands.Pop().value)),
-                int.Parse(Convert.ToString(operands.Pop().value)),
-                int.Parse(Convert.ToString(operands.Pop().value)));
-                //int.Parse(Convert.ToString(operands.Pop().value)));
-                //Convert.ToString(operands.Pop().value));
-                op = new Operator(this.figure.Draw, 'C'); 
+                int r = int.Parse(Convert.ToString(operands.Pop().value));
+                int y = int.Parse(Convert.ToString(operands.Pop().value));
+                int x = int.Parse(Convert.ToString(operands.Pop().value));
+                string name = Convert.ToString(operands.Pop().value);
+                this.figure = new Circle2(r,y,x,name);
+                op = new Operator(this.figure.Draw, 'C');
                 ShapeContainer.AddFigure(figure);
-                listBox2.Items.Add(figure);
+                listBox2.Items.Add("Команда: " + Convert.ToString(textBox5.Text) + " корректная");
+                listBox2.Items.Add("Окружность " + figure.name + " отрисована");
                 op.operatorMethod();
             }
             if (op.symbolOperator == 'M')
             {
-                this.figure.MoveTo(int.Parse(Convert.ToString(operands.Pop().value)),int.Parse(Convert.ToString(operands.Pop().value)));
+                this.figure.MoveTo(Convert.ToInt32(Convert.ToString(operands.Pop().value)), Convert.ToInt32(Convert.ToString(operands.Pop().value)));
             }
             if (op.symbolOperator == 'D')
             {
@@ -181,35 +184,39 @@ namespace Program__16_Forms
                 op.operatorMethod();
             }
         }
-        private void textBox5_TextChanged(object sender, EventArgs e)
+        private void textBox5_KeyDown(object sender, KeyEventArgs e)
         {
-            //textBox5.KeyUp += textBox5_KeyDown;
-            for (int i = 0; i < textBox5.Text.Length; i++)
+            flag = true;
+            if (e.KeyCode == Keys.Enter)
             {
-                if (IsNotOperation(textBox5.Text[i]))
+                for (int i = 0; i < textBox5.Text.Length; i++)
                 {
-                    if (!(Char.IsDigit(textBox5.Text[i])))
+                    if (IsNotOperation(textBox5.Text[i]))
                     {
-                        this.operands.Push(new Operand(textBox5.Text[i]));
-                        continue;
-                    }
-                    else if (Char.IsDigit(textBox5.Text[i]))
-                    {
-                        if (Char.IsDigit(textBox5.Text[i + 1]))
+                        if (!(Char.IsDigit(textBox5.Text[i])))
                         {
-                            if (flag)
-                            {
-                                this.operands.Push(new Operand(textBox5.Text[i]));
-                            }
-                            this.operands.Push(new Operand(int.Parse(Convert.ToString(this.operands.Pop().value)) * 10 + int.Parse(Convert.ToString(textBox5.Text[i + 1]))));
-                            flag = false;
+                            this.operands.Push(new Operand(textBox5.Text[i]));
                             continue;
                         }
-                        else
-                        if ((textBox5.Text[i + 1] == ',' || textBox5.Text[i + 1] == ')') && !(Char.IsDigit(textBox5.Text[i - 1])))
+                        else if (Char.IsDigit(textBox5.Text[i]))
                         {
-                            this.operands.Push(new Operand(int.Parse(Convert.ToString(textBox5.Text[i]))));
-                            continue;
+                            if (Char.IsDigit(textBox5.Text[i + 1]))
+                            {
+                                if (flag)
+                                {
+                                    this.operands.Push(new Operand((textBox5.Text[i])));
+                                }
+                                this.operands.Push(new Operand(Convert.ToInt32(Convert.ToString(this.operands.Pop().value)) * 10 + Convert.ToInt32(Convert.ToString(textBox5.Text[i + 1]))));
+                                flag = false;
+                                continue;
+                            }
+                            else 
+                            if (textBox5.Text[i + 1] == ',' || textBox5.Text[i + 1] == ')' && Char.IsDigit(textBox5.Text[i]))
+                            {
+                                //this.operands.Push(new Operand(int.Parse(textBox5.Text[i].ToString())));
+                                flag = true;
+                                continue;
+                            }
                         }
                     }
                     else if (textBox5.Text[i] == 'C')
@@ -253,98 +260,28 @@ namespace Program__16_Forms
                         }
                         while (operators.Peek().symbolOperator != '(');
                     }
-                    if (operators.Peek() != null)
-                    {
-                        this.SelectingPerformingOperation(operators.Peek());
-                    }
-                    else
-                    {
-                        MessageBox.Show("Введенной операции не существует");
-                    }
                 }
-            }
-        }
-        private void textBox5_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                try
+                if (operators.Peek() != null)
                 {
-                    //выполняется обработка входной строки
-                    for (int i = 0; i < textBox5.Text.Length; i++)
-                    {
-                        if (IsNotOperation(textBox5.Text[i]))
-                        {
-                            if (!(Char.IsDigit(textBox5.Text[i])))
-                            {
-                                this.operands.Push(new Operand(textBox5.Text[i]));
-                                continue;
-                            }
-                            else if (Char.IsDigit(textBox5.Text[i]))
-                            {
-                                if (Char.IsDigit(textBox5.Text[i + 1]))
-                                {
-                                    if (flag)
-                                    {
-                                        this.operands.Push(new Operand(textBox5.Text[i]));
-                                    }
-                                    this.operands.Push(new Operand(int.Parse(Convert.ToString(this.operands.Pop().value)) * 10 + int.Parse(Convert.ToString(textBox5.Text[i + 1]))));
-                                    flag = false;
-                                    continue;
-                                }
-                                else if ((textBox5.Text[i + 1] == ','
-                                        || textBox5.Text[i + 1] == ')')
-                                        && !(Char.IsDigit(textBox5.Text[i - 1])))
-                                {
-                                    this.operands.Push(new Operand(int.Parse(Convert.ToString(textBox5.Text[i]))));
-                                    continue;
-                                }
-                            }
-                            else if (textBox5.Text[i] == 'R')
-                            {
-                                if (this.operators.Count == 0)
-                                {
-                                    this.operators.Push(OperatorContainer.FindOperator(textBox5.Text[i]));
-                                }
-                            }
-                            else if (textBox5.Text[i] == '(')
-                            {
-                                this.operators.Push(OperatorContainer.FindOperator(textBox5.Text[i]));
-                            }
-                            else if (textBox5.Text[i] == ')')
-                            {
-                                do
-                                {
-                                    if (operators.Peek().symbolOperator == '(')
-                                    {
-                                        operators.Pop();
-                                        break;
-                                    }
-                                    if (operators.Count == 0)
-                                    {
-                                        break;
-                                    }
-                                }
-                                while (operators.Peek().symbolOperator != '(');
-                            }
-                            if (operators.Peek() != null)
-                            {
-                                this.SelectingPerformingOperation(operators.Peek());
-                            }
-                            else
-                            {
-                                MessageBox.Show("Введенной операции не существует");
-                            }
-                        }
-                    }
-                }
-                catch
-                {
-                    //добавляется информация о некорректной команде в историю команд
+
+                    this.SelectingPerformingOperation(operators.Peek());
 
                 }
-                textBox5.Text = "";
+                else
+                {
+                    listBox2.Items.Add("Введенной команды " + Convert.ToString(textBox5.Text) + " не существует" + "\n");
+                    //MessageBox.Show("Введенной операции не существует");
+                }
+                try
+                {
+
+                }
+                catch (Exception a)
+                {
+                    MessageBox.Show(a.Message);
+                }
             }
+
         }
 
         public void Clear()
@@ -902,32 +839,31 @@ namespace Program__16_Forms
 
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
         {
-            if (radioButton1.Checked == true)
-            {
-                label1.Visible = false;
-                label2.Visible = false;
-                label3.Visible = false;
-                label4.Visible = false;
-                textBox1.Visible = false;
-                textBox2.Visible = false;
-                textBox3.Visible = false;
-                textBox4.Visible = false;
-                button1.Visible = false;
-                button2.Visible = false;
-                button3.Visible = false;
-                button6.Visible = false;
-                button5.Visible = false;
-                label5.Visible = false;
-                comboBox1.Visible = false;
-                listBox1.Visible = false;
+            label1.Text = "История команд";
+            label1.Visible = true;
+            label2.Visible = false;
+            label3.Visible = false;
+            label4.Visible = false;
+            textBox1.Visible = false;
+            textBox2.Visible = false;
+            textBox3.Visible = false;
+            textBox4.Visible = false;
+            button1.Visible = false;
+            button2.Visible = false;
+            button3.Visible = false;
+            button6.Visible = false;
+            button5.Visible = false;
+            label5.Visible = false;
+            comboBox1.Visible = false;
 
-                listBox2.Visible = true;
-                textBox5.Visible = true;
-            }
+            listBox1.Visible = false;
+            listBox2.Visible = true;
+            textBox5.Visible = true;
         }
 
         private void radioButton2_CheckedChanged(object sender, EventArgs e)
         {
+            label1.Text = "X";
             label1.Visible = true;
             label2.Visible = true;
             label3.Visible = true;
@@ -945,6 +881,7 @@ namespace Program__16_Forms
             comboBox1.Visible = true;
 
             listBox1.Visible = true;
+            listBox2.Visible = false;
             textBox5.Visible = false;
         }
     }
