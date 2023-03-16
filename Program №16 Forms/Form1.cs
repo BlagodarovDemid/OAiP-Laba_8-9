@@ -14,6 +14,7 @@ using System.Reflection.Emit;
 using System.Globalization;
 using System.Collections;
 using System.Linq.Expressions;
+using System.Xml.Linq;
 
 namespace Program__16_Forms
 {
@@ -121,8 +122,6 @@ namespace Program__16_Forms
                 operators.Add(new Operator('C'));
                 operators.Add(new Operator('M'));
                 operators.Add(new Operator('D'));
-                operators.Add(new Operator('R'));
-                operators.Add(new Operator('E'));
                 operators.Add(new Operator(','));
                 operators.Add(new Operator('('));
                 operators.Add(new Operator(')'));
@@ -139,6 +138,7 @@ namespace Program__16_Forms
                 return null;
             }
         }
+
         private Stack<Operator> operators = new Stack<Operator>();
         private Stack<Operand> operands = new Stack<Operand>();
         private bool IsNotOperation(char item)
@@ -164,24 +164,97 @@ namespace Program__16_Forms
                 int y = int.Parse(Convert.ToString(operands.Pop().value));
                 int x = int.Parse(Convert.ToString(operands.Pop().value));
                 string name = Convert.ToString(operands.Pop().value);
-                this.figure = new Circle2(r,y,x,name);
+                figure = new Circle2(r,y,x,name);
                 op = new Operator(this.figure.Draw, 'C');
                 ShapeContainer.AddFigure(figure);
                 listBox2.Items.Add("Команда: " + Convert.ToString(textBox5.Text) + " корректная");
                 listBox2.Items.Add("Окружность " + figure.name + " отрисована");
                 op.operatorMethod();
             }
-            if (op.symbolOperator == 'M')
+            if (textBox5.Text[0] == 'M')
             {
-                this.figure.MoveTo(Convert.ToInt32(Convert.ToString(operands.Pop().value)), Convert.ToInt32(Convert.ToString(operands.Pop().value)));
+                try
+                {
+                    int y = Convert.ToInt32(Convert.ToString(operands.Pop().value));
+                    int x = Convert.ToInt32(Convert.ToString(operands.Pop().value));
+                    string name = Convert.ToString(operands.Pop().value);
+                    string nameMoveTo = name + " Переместился\n";
+                    if (ShapeContainer.FindFigure(name) == null)
+                    {
+                        MessageBox.Show("Введите данные правильно");
+                        comboBox1.Text += "Введите данные правильно\n";
+                    }
+                    else
+                    {
+                        ShapeContainer.FindFigure(name).MoveTo(x, y);
+                        comboBox1.Text += nameMoveTo + "\n";
+                    }
+                }
+                catch
+                {
+                    MessageBox.Show("Параметров должно быть 3");
+                    comboBox1.Text += "Ошибка!\n";
+                }
             }
-            if (op.symbolOperator == 'D')
+            if (textBox5.Text[0] == 'D')
             {
+                try
+                {
+                    string name = Convert.ToString(operands.Pop().value);
+                    string nameDelete = name + "Удалился";
+                    if (ShapeContainer.FindFigure(name) == null)
+                    {
+                        MessageBox.Show("Введите данные правильно");
+                        comboBox1.Text += "Ошибка!\n";
+                    }
+                    else
+                    {
+                        ShapeContainer.FindFigure(name).DeleteF(ShapeContainer.FindFigure(name), true);
+                        comboBox1.Text += ShapeContainer.FindFigure(name) + nameDelete;
+                    }
+                }
+                catch
+                {
+                    MessageBox.Show("Введите данные правильно");
+                    comboBox1.Text += "Ошибка!\n";
+                }
+            }
+            else if (op.symbolOperator == 'M')
+            {   
+/*                if (!((this.x + x < 0 && this.y + y < 0)
+                || (this.y + y < 0)
+                || (this.x + x > Init.pictureBox.Width && this.y + y < 0)
+                || (this.x + this.r + x > Init.pictureBox.Width)
+                || (this.x + x > Init.pictureBox.Width && this.y + y > Init.pictureBox.Width)
+                || (this.y + this.r + y > Init.pictureBox.Width)
+                || (this.x + x < 0 && this.y + y > Init.pictureBox.Width) || (this.x + x < 0)))
+                {
+                    op = new Operator(this.figure.Move, 'M');
+                    op.operatorMethod();
+                    Graphics g = Graphics.FromImage(Init.bitmap);
+                    ShapeContainer.figureList.Remove(this.figure);
+                    g.Clear(Color.White);
+                    Init.pictureBox.Image = Init.bitmap;
+                    this.figure.Delete();
+                    ShapeContainer.figureList.Add(this.figure);
+                }*/
+            }
+            else if (op.symbolOperator == 'D')
+            {
+                /*                string name = Convert.ToString(operands.Pop().value);
+                                ShapeContainer.RemoveFigure(this.figure);
+                                Graphics g = Graphics.FromImage(Init.bitmap);
+                                g.Clear(Color.WhiteSmoke);
+                                Init.pictureBox.Image = Init.bitmap;
+                                op = new Operator(this.figure.Delete, 'D');
+                                //op = new Operator('D');
+                                listBox2.Items.Add("Удалена окружность: " + this.figure.name);
+                                op.operatorMethod();*//*
+                string name = Convert.ToString(operands.Pop().value);
                 DeleteF(figure, true);
-                listBox2.Items.RemoveAt(listBox2.SelectedIndex);
-                listBox2.ResetText();
-                listBox2.Update();
-                op.operatorMethod();
+                op = new Operator('D');
+                listBox2.Items.Add("Удалена окружность: " + this.figure.name);
+                op.operatorMethod();*/
             }
         }
         private void textBox5_KeyDown(object sender, KeyEventArgs e)
@@ -213,7 +286,7 @@ namespace Program__16_Forms
                             else 
                             if (textBox5.Text[i + 1] == ',' || textBox5.Text[i + 1] == ')' && Char.IsDigit(textBox5.Text[i]))
                             {
-                                //this.operands.Push(new Operand(int.Parse(textBox5.Text[i].ToString())));
+                                //this.operands.Push(new Operand((textBox5.Text[i])));
                                 flag = true;
                                 continue;
                             }

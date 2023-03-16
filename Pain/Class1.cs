@@ -19,6 +19,18 @@ namespace Pain
         public string name;
         abstract public void Draw();
         abstract public void MoveTo(int x, int y);
+        public void Delete()
+        {
+            foreach (Figure f in ShapeContainer.figureList)
+            {
+                f.Draw();
+            }
+        }
+        public void Move()
+        {
+            this.x += x;
+            this.y += y;
+        }
     }
     public class ShapeContainer
     {
@@ -30,6 +42,17 @@ namespace Pain
         public static void RemoveFigure(Figure figure)
         {
             figureList.Remove(figure);
+        }
+        public static Figure FindFigure(string name)
+        {
+            foreach (Figure find in figureList)
+            {
+                if (find.name == name)
+                {
+                    return find;
+                }
+            }
+            return null;
         }
     }
 

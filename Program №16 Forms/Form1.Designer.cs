@@ -161,7 +161,7 @@
             this.listBox1.ItemHeight = 16;
             this.listBox1.Items.AddRange(new object[] {
             ""});
-            this.listBox1.Location = new System.Drawing.Point(1231, 40);
+            this.listBox1.Location = new System.Drawing.Point(1231, 41);
             this.listBox1.Margin = new System.Windows.Forms.Padding(4);
             this.listBox1.Name = "listBox1";
             this.listBox1.Size = new System.Drawing.Size(151, 116);
@@ -280,7 +280,7 @@
             this.listBox2.ItemHeight = 16;
             this.listBox2.Items.AddRange(new object[] {
             ""});
-            this.listBox2.Location = new System.Drawing.Point(1091, 39);
+            this.listBox2.Location = new System.Drawing.Point(1091, 40);
             this.listBox2.Name = "listBox2";
             this.listBox2.Size = new System.Drawing.Size(291, 116);
             this.listBox2.TabIndex = 25;
@@ -310,8 +310,8 @@
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.textBox5);
             this.Controls.Add(this.pictureBox1);
-            this.Controls.Add(this.listBox2);
             this.Controls.Add(this.listBox1);
+            this.Controls.Add(this.listBox2);
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Form1";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
