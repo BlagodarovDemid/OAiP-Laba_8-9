@@ -19,18 +19,6 @@ namespace Pain
         public string name;
         abstract public void Draw();
         abstract public void MoveTo(int x, int y);
-        public void Delete()
-        {
-            foreach (Figure f in ShapeContainer.figureList)
-            {
-                f.Draw();
-            }
-        }
-        public void Move()
-        {
-            this.x += x;
-            this.y += y;
-        }
     }
     public class ShapeContainer
     {

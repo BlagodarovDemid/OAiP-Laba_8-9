@@ -46,6 +46,10 @@ namespace Program__16_Forms
         private bool flag = false;
         private bool triag;
 
+        int circleX = 0;
+        int circleY = 0;
+        int circleR = 0;
+
         public Form1()
         {
             InitializeComponent();
@@ -70,8 +74,8 @@ namespace Program__16_Forms
             label5.Visible = false;
             comboBox1.Visible = false;
             listBox1.Visible = false;
+            textBox5.Text = "C(figure_name,x,y,a) || M(figure_name,dx,dy) || D(figure_name)";
         }
-
 
         public class Operand
 	    {
@@ -152,24 +156,30 @@ namespace Program__16_Forms
                 return false;
             }
         }
-        public int ConvertStringToInt(object c)
-        {
-            return Convert.ToInt32(Convert.ToString(c));
-        }
         private void SelectingPerformingOperation(Operator op)
         {
-            if (op.symbolOperator == 'C')
+            if (textBox5.Text[0] == 'C')
             {
                 int r = int.Parse(Convert.ToString(operands.Pop().value));
                 int y = int.Parse(Convert.ToString(operands.Pop().value));
                 int x = int.Parse(Convert.ToString(operands.Pop().value));
                 string name = Convert.ToString(operands.Pop().value);
-                figure = new Circle2(r,y,x,name);
-                op = new Operator(this.figure.Draw, 'C');
-                ShapeContainer.AddFigure(figure);
-                listBox2.Items.Add("Команда: " + Convert.ToString(textBox5.Text) + " корректная");
-                listBox2.Items.Add("Окружность " + figure.name + " отрисована");
-                op.operatorMethod();
+                circleR = r;
+                circleY = y;
+                circleX = x;
+                if (x + r < Init.pictureBox.Width && y + r < Init.pictureBox.Height)
+                {
+                    circle = new Circle2(r, y, x, name);
+                    op = new Operator(this.circle.Draw, 'C');
+                    ShapeContainer.AddFigure(this.circle);
+                    listBox2.Items.Add("Команда: " + Convert.ToString(textBox5.Text) + " корректная");
+                    listBox2.Items.Add("Окружность " + circle.name + " отрисована");
+                    op.operatorMethod();
+                }
+                else
+                {
+                    listBox2.Items.Add("Превышено ограничение поля");
+                }
             }
             if (textBox5.Text[0] == 'M')
             {
@@ -178,22 +188,34 @@ namespace Program__16_Forms
                     int y = Convert.ToInt32(Convert.ToString(operands.Pop().value));
                     int x = Convert.ToInt32(Convert.ToString(operands.Pop().value));
                     string name = Convert.ToString(operands.Pop().value);
-                    string nameMoveTo = name + " Переместился\n";
                     if (ShapeContainer.FindFigure(name) == null)
                     {
-                        MessageBox.Show("Введите данные правильно");
-                        comboBox1.Text += "Введите данные правильно\n";
+                        listBox2.Items.Add("Команда: " + textBox5.Text + " некорректна");
+                        listBox2.Items.Add("Пример записи: M(figure_name,dx,dy)");
                     }
                     else
                     {
-                        ShapeContainer.FindFigure(name).MoveTo(x, y);
-                        comboBox1.Text += nameMoveTo + "\n";
+                        if (!((circleX + x < 0 && circleY + y < 0)
+                        || (circleY + y < 0)
+                        || (circleX + x > Init.pictureBox.Width && circleY + y < 0)
+                        || (circleX + circleR + x > Init.pictureBox.Width)
+                        || (circleX + x > Init.pictureBox.Width && circleY + y > Init.pictureBox.Width)
+                        || (circleY + circleR + y > Init.pictureBox.Width)
+                        || (circleX + x < 0 && circleY + y > Init.pictureBox.Width) || (circleX + x < 0)))
+                        {
+                            ShapeContainer.FindFigure(name).MoveTo(x, y);
+                            circleX += x;
+                            circleY += y;
+                            listBox2.Items.Add("Фигура: " + this.circle.name + " перемещена");
+                            listBox2.Items.Add("На X: " + Convert.ToString(x) + " Y: " + Convert.ToString(y));
+                            listBox2.Items.Add("X: " + Convert.ToString(circleX) + " Y: " + Convert.ToString(circleY));
+                        }
                     }
                 }
                 catch
                 {
-                    MessageBox.Show("Параметров должно быть 3");
-                    comboBox1.Text += "Ошибка!\n";
+                    listBox2.Items.Add("Команда: " + textBox5.Text + " некорректна");
+                    listBox2.Items.Add("Пример записи: M(figure_name,dx,dy)");
                 }
             }
             if (textBox5.Text[0] == 'D')
@@ -201,60 +223,22 @@ namespace Program__16_Forms
                 try
                 {
                     string name = Convert.ToString(operands.Pop().value);
-                    string nameDelete = name + "Удалился";
                     if (ShapeContainer.FindFigure(name) == null)
                     {
-                        MessageBox.Show("Введите данные правильно");
-                        comboBox1.Text += "Ошибка!\n";
+                        listBox2.Items.Add("Команда: " + textBox5.Text + " некорректна");
+                        listBox2.Items.Add("Пример записи: D(figure_name)");
                     }
                     else
                     {
-                        ShapeContainer.FindFigure(name).DeleteF(ShapeContainer.FindFigure(name), true);
-                        comboBox1.Text += ShapeContainer.FindFigure(name) + nameDelete;
+                        Delete(ShapeContainer.FindFigure(name), circleX, circleY, circleR);
+                        listBox2.Items.Add("Удалена окружность: " + this.circle.name);
                     }
                 }
                 catch
                 {
-                    MessageBox.Show("Введите данные правильно");
-                    comboBox1.Text += "Ошибка!\n";
+                    listBox2.Items.Add("Команда: " + textBox5.Text + " некорректна");
+                    listBox2.Items.Add("Пример записи: D(figure_name)");
                 }
-            }
-            else if (op.symbolOperator == 'M')
-            {   
-/*                if (!((this.x + x < 0 && this.y + y < 0)
-                || (this.y + y < 0)
-                || (this.x + x > Init.pictureBox.Width && this.y + y < 0)
-                || (this.x + this.r + x > Init.pictureBox.Width)
-                || (this.x + x > Init.pictureBox.Width && this.y + y > Init.pictureBox.Width)
-                || (this.y + this.r + y > Init.pictureBox.Width)
-                || (this.x + x < 0 && this.y + y > Init.pictureBox.Width) || (this.x + x < 0)))
-                {
-                    op = new Operator(this.figure.Move, 'M');
-                    op.operatorMethod();
-                    Graphics g = Graphics.FromImage(Init.bitmap);
-                    ShapeContainer.figureList.Remove(this.figure);
-                    g.Clear(Color.White);
-                    Init.pictureBox.Image = Init.bitmap;
-                    this.figure.Delete();
-                    ShapeContainer.figureList.Add(this.figure);
-                }*/
-            }
-            else if (op.symbolOperator == 'D')
-            {
-                /*                string name = Convert.ToString(operands.Pop().value);
-                                ShapeContainer.RemoveFigure(this.figure);
-                                Graphics g = Graphics.FromImage(Init.bitmap);
-                                g.Clear(Color.WhiteSmoke);
-                                Init.pictureBox.Image = Init.bitmap;
-                                op = new Operator(this.figure.Delete, 'D');
-                                //op = new Operator('D');
-                                listBox2.Items.Add("Удалена окружность: " + this.figure.name);
-                                op.operatorMethod();*//*
-                string name = Convert.ToString(operands.Pop().value);
-                DeleteF(figure, true);
-                op = new Operator('D');
-                listBox2.Items.Add("Удалена окружность: " + this.figure.name);
-                op.operatorMethod();*/
             }
         }
         private void textBox5_KeyDown(object sender, KeyEventArgs e)
@@ -286,7 +270,6 @@ namespace Program__16_Forms
                             else 
                             if (textBox5.Text[i + 1] == ',' || textBox5.Text[i + 1] == ')' && Char.IsDigit(textBox5.Text[i]))
                             {
-                                //this.operands.Push(new Operand((textBox5.Text[i])));
                                 flag = true;
                                 continue;
                             }
@@ -374,7 +357,7 @@ namespace Program__16_Forms
             if (flag == true)
             {
                 Graphics g = Graphics.FromImage(Init.bitmap);
-                ShapeContainer.RemoveFigure(figure);
+                ShapeContainer.figureList.Remove(figure);
                 g.Clear(Color.WhiteSmoke);
                 Init.pictureBox.Image = Init.bitmap;
                 foreach (Figure f in ShapeContainer.figureList)
@@ -393,6 +376,28 @@ namespace Program__16_Forms
                     f.Draw();
                 }
                 ShapeContainer.AddFigure(figure);
+            }
+        }
+        public void Delete(Figure figure,int x, int y, int r)
+        {
+            if (flag == true)
+            {
+                Graphics g = Graphics.FromImage(Init.bitmap);
+                figure.h = r;
+                figure.w = r;
+                figure.y = y;
+                figure.x = x;
+                ShapeContainer.figureList.Remove(figure);
+                g.Clear(Color.WhiteSmoke);
+                Init.pictureBox.Image = Init.bitmap;
+                foreach (Figure f in ShapeContainer.figureList)
+                {
+                    f.h += r;
+                    f.w += r;
+                    f.y += y;
+                    f.x += x;
+                    f.Draw();
+                }
             }
         }
 
