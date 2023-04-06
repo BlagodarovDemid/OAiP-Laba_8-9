@@ -230,7 +230,7 @@ namespace Program__16_Forms
                     }
                     else
                     {
-                        Delete(ShapeContainer.FindFigure(name), circleX, circleY, circleR);
+                        DeleteF(ShapeContainer.FindFigure(name), true);
                         listBox2.Items.Add("Удалена окружность: " + this.circle.name);
                     }
                 }
@@ -362,6 +362,7 @@ namespace Program__16_Forms
                 Init.pictureBox.Image = Init.bitmap;
                 foreach (Figure f in ShapeContainer.figureList)
                 {
+                    if(f != null)
                     f.Draw();
                 }
             }
@@ -380,24 +381,13 @@ namespace Program__16_Forms
         }
         public void Delete(Figure figure,int x, int y, int r)
         {
-            if (flag == true)
+            Graphics g = Graphics.FromImage(Init.bitmap);
+            ShapeContainer.figureList.Remove(figure);
+            g.Clear(Color.WhiteSmoke);
+            Init.pictureBox.Image = Init.bitmap;
+            foreach (Figure f in ShapeContainer.figureList)
             {
-                Graphics g = Graphics.FromImage(Init.bitmap);
-                figure.h = r;
-                figure.w = r;
-                figure.y = y;
-                figure.x = x;
-                ShapeContainer.figureList.Remove(figure);
-                g.Clear(Color.WhiteSmoke);
-                Init.pictureBox.Image = Init.bitmap;
-                foreach (Figure f in ShapeContainer.figureList)
-                {
-                    f.h += r;
-                    f.w += r;
-                    f.y += y;
-                    f.x += x;
-                    f.Draw();
-                }
+                f.Draw();
             }
         }
 
