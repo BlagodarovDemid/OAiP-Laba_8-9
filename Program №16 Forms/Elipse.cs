@@ -156,6 +156,7 @@ namespace Program__16_Forms
                 Init.pictureBox.Image = Init.bitmap;
                 foreach (Figure f in ShapeContainer.figureList)
                 {
+                    if (f != null)
                     f.Draw();
                 }
                 ShapeContainer.figureList.Add(figure);
