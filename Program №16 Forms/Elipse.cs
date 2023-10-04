@@ -34,7 +34,7 @@ namespace Program__16_Forms
             Init.pictureBox.Image = Init.bitmap;
         }
 
-        public override void MoveTo(int x, int y)
+        public override void MoveTo(int x, int y, string name)
         {
             if (!((this.x + x < 0 && this.y + y < 0)
                 || (this.y + y < 0)
@@ -85,7 +85,7 @@ namespace Program__16_Forms
             Init.pictureBox.Image = Init.bitmap;
         }
 
-        public override void MoveTo(int x, int y)
+        public override void MoveTo(int x, int y, string name)
         {
             if (!((this.x + x < 0 && this.y + y < 0)
                 || (this.y + y < 0)
@@ -135,7 +135,7 @@ namespace Program__16_Forms
             Init.pictureBox.Image = Init.bitmap;
         }
 
-        public override void MoveTo(int x, int y)
+        public override void MoveTo(int x, int y, string name)
         {
             if (!((this.x + x < 0 && this.y + y < 0)
                 || (this.y + y < 0)

@@ -47,7 +47,7 @@ namespace Program__16_Forms
             g.DrawPolygon(Init.pen, pointFs);
             Init.pictureBox.Image = Init.bitmap;
         }
-        public override void MoveTo(int x, int y)
+        public override void MoveTo(int x, int y, string name)
         {
             for (int i = 0; i < numPoints; i++)
             {

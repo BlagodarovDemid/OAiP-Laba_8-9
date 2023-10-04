@@ -14,12 +14,13 @@ namespace Program__16_Forms
     {
         Figure figure;
         
-        public Rectangle(int x, int y, int w, int h)
+        public Rectangle(int x, int y, int w, int h,string name = null)
         {
             this.x = x;
             this.y = y;
             this.w = w;
             this.h = h;
+            this.name = name;
         }
         public Rectangle()
         {
@@ -27,6 +28,35 @@ namespace Program__16_Forms
             this.y = 0;
             this.w = 0;
             this.h = 0;
+            this.name = "";
+        }
+        public void DeleteF(Figure figure, bool flag = true)
+        {
+            if (flag == true)
+            {
+                Graphics g = Graphics.FromImage(Init.bitmap);
+                ShapeContainer.figureList.Remove(figure);
+                g.Clear(Color.WhiteSmoke);
+                Init.pictureBox.Image = Init.bitmap;
+                foreach (Figure f in ShapeContainer.figureList)
+                {
+                    if (f != null)
+                        f.Draw();
+                }
+            }
+            else
+            {
+                Graphics g = Graphics.FromImage(Init.bitmap);
+                ShapeContainer.RemoveFigure(figure);
+                g.Clear(Color.WhiteSmoke);
+                Init.pictureBox.Image = Init.bitmap;
+                foreach (Figure f in ShapeContainer.figureList)
+                {
+                    if (f != null)
+                        f.Draw();
+                }
+                ShapeContainer.AddFigure(figure);
+            }
         }
 
         public override void Draw()
@@ -36,7 +66,7 @@ namespace Program__16_Forms
             Init.pictureBox.Image = Init.bitmap;
         }
 
-        public override void MoveTo(int x, int y)
+        public override void MoveTo(int x, int y, string name)
         {
             if (!((this.x + x < 0 && this.y + y < 0)
                 || (this.y + y < 0)
@@ -49,7 +79,7 @@ namespace Program__16_Forms
                 this.x += x;
                 this.y += y;
 
-                Graphics g = Graphics.FromImage(Init.bitmap);
+/*                Graphics g = Graphics.FromImage(Init.bitmap);
                 ShapeContainer.figureList.Remove(figure);
 
                 g.Clear(Color.White);
@@ -58,8 +88,12 @@ namespace Program__16_Forms
                 foreach (Figure f in ShapeContainer.figureList)
                 {
                     f.Draw();
-                }
-                ShapeContainer.figureList.Add(figure);
+                }*/
+                //figure.name = this.name;
+                //ShapeContainer.figureList.Add(figure);
+                
+                DeleteF(this, false);
+                this.Draw();
             }
         }
     }
@@ -85,7 +119,7 @@ namespace Program__16_Forms
             g.DrawRectangle(Init.pen, this.x, this.y, this.w, this.w);
             Init.pictureBox.Image = Init.bitmap;
         }
-        public override void MoveTo(int x, int y)
+        public override void MoveTo(int x, int y, string name)
         {
             if (!((this.x + x < 0 && this.y + y < 0)
                 || (this.y + y < 0)

@@ -18,18 +18,23 @@ namespace Pain
         public int h;
         public string name;
         abstract public void Draw();
-        abstract public void MoveTo(int x, int y);
+        abstract public void MoveTo(int x, int y, string name = null);
     }
     public class ShapeContainer
     {
         public static List<Figure> figureList = new List<Figure>();
-        public static void AddFigure(Figure figure)
+        public static void AddFigure(Figure figure, string name =  null)
         {
+            figure.name = name;
             figureList.Add(figure);
         }
         public static void RemoveFigure(Figure figure)
         {
             figureList.Remove(figure);
+        }
+        public static void Clear()
+        {
+            figureList.Clear();
         }
         public static Figure FindFigure(string name)
         {

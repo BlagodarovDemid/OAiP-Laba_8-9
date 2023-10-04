@@ -41,6 +41,7 @@ namespace Program__16_Forms
 
         int i = 0;
         int count = 1;
+        int RecCount = 0;
         private int numPoints;
         private PointF[] pointFs;
         private bool flag = false;
@@ -343,13 +344,30 @@ namespace Program__16_Forms
         public void Clear()
         {
             Graphics g = Graphics.FromImage(Init.bitmap);
-            g.Clear(Color.White);
+            g.Clear(Color.WhiteSmoke);
             listBox1.Items.Clear();
             textBox1.Clear();
             textBox2.Clear();
             textBox3.Clear();
             textBox4.Clear();
             pictureBox1.Refresh();
+            ShapeContainer.Clear();
+            i = 0;
+            count = 1;
+            circleX = 0;
+            circleY = 0;
+            circleR = 0;
+            RecCount = 0;
+            textBox1.Enabled = true;
+            textBox2.Enabled = true;
+            textBox3.Enabled = true;
+            textBox4.Enabled = true;
+            label1.Text = "X";
+            label2.Text = "Y";
+            label3.Text = "W";
+            label4.Text = "H";
+            comboBox1.SelectedIndex = 0;
+            button5.Enabled = true;
         }
 
         public void DeleteF(Figure figure, bool flag = true)
@@ -379,38 +397,32 @@ namespace Program__16_Forms
                 }
                 ShapeContainer.AddFigure(figure);
             }
-        }
-        public void Delete(Figure figure,int x, int y, int r)
-        {
-            Graphics g = Graphics.FromImage(Init.bitmap);
-            ShapeContainer.figureList.Remove(figure);
-            g.Clear(Color.WhiteSmoke);
-            Init.pictureBox.Image = Init.bitmap;
-            foreach (Figure f in ShapeContainer.figureList)
-            {
-                f.Draw();
-            }
+            button5.Enabled = true;
         }
 
         private void button1_Click(object sender, EventArgs e)// Draw and AddShape
         {
+            textBox2.Enabled = true;
+            textBox3.Enabled = true;
+            button5.Enabled = true;
             if (comboBox1.SelectedIndex == 0)
             {
-                rectangle = new Rectangle(int.Parse(textBox1.Text), int.Parse(textBox2.Text), int.Parse(textBox3.Text), int.Parse(textBox4.Text));
-                ShapeContainer.AddFigure(this.rectangle);
+                RecCount += 1;
+                rectangle = new Rectangle(int.Parse(textBox1.Text), int.Parse(textBox2.Text), int.Parse(textBox3.Text), int.Parse(textBox4.Text),Convert.ToString("Rectangle №" + RecCount.ToString()));
+                rectangle.name = "Rectangle №" + RecCount.ToString();
+                ShapeContainer.AddFigure(rectangle,rectangle.name);
                 button5.Visible = false;
                 listBox1.Items.Clear();
                 try
                 {
                     foreach (Figure figure in ShapeContainer.figureList)
                     {
-                        listBox1.Items.Add(figure);
+                        if (figure != null) { }
+                        listBox1.Items.Add(rectangle);
                         rectangle.Draw();
-                        textBox2.Enabled = true;
-                        textBox3.Enabled = true;
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     MessageBox.Show(ex.Message);
                 }
@@ -427,8 +439,6 @@ namespace Program__16_Forms
                     {
                         listBox1.Items.Add(figure);
                         square.Draw();
-                        textBox2.Enabled = true;
-                        textBox3.Enabled = true;
                     }
                 }
                 catch (Exception ex)
@@ -448,8 +458,6 @@ namespace Program__16_Forms
                     {
                         listBox1.Items.Add(figure);
                         elipse.Draw();
-                        textBox2.Enabled = true;
-                        textBox3.Enabled = true;
                     }
                 }
                 catch (Exception ex)
@@ -469,8 +477,6 @@ namespace Program__16_Forms
                     {
                         listBox1.Items.Add(figure);
                         circle.Draw();
-                        textBox2.Enabled = true;
-                        textBox3.Enabled = true;
                     }
                 }
                 catch (Exception ex)
@@ -491,8 +497,6 @@ namespace Program__16_Forms
                     {
                         listBox1.Items.Add(figure);
                         polygon.Draw();
-                        textBox2.Enabled = true;
-                        textBox3.Enabled = true;
                     }
                 }
                 catch (Exception ex)
@@ -513,8 +517,6 @@ namespace Program__16_Forms
                     {
                         listBox1.Items.Add(figure);
                         triangle.Draw();
-                        textBox2.Enabled = true;
-                        textBox3.Enabled = true;
                     }
                 }
                 catch (Exception ex)
@@ -547,11 +549,16 @@ namespace Program__16_Forms
         {
             try
             {
-                if(listBox1.SelectedItem == null)
+                this.pointFs = this.pointFs;
+                Figure figure = (Figure)listBox1.SelectedItem;
+                if (figure == null)
                 {
                     MessageBox.Show("Null");
+                    throw new Exception();
                 }
-                else if(listBox1.SelectedItem == this.rectangle)
+                if (comboBox1.SelectedIndex == 4 || comboBox1.SelectedIndex == 5) { figure.MoveTo(int.Parse(textBox2.Text), int.Parse(textBox3.Text)); }
+                figure.MoveTo(int.Parse(textBox1.Text), int.Parse(textBox2.Text),figure.name);
+/*                else if(listBox1.SelectedItem == this.rectangle.name)
                 {
                     this.rectangle = (Rectangle)listBox1.SelectedItem;
                     this.rectangle.MoveTo(int.Parse(textBox1.Text), int.Parse(textBox2.Text));
@@ -585,7 +592,7 @@ namespace Program__16_Forms
                 {
                     this.idFigure = (IdFigure)listBox1.SelectedItem;
                     this.idFigure.MoveTo(int.Parse(textBox1.Text), int.Parse(textBox2.Text));
-                }
+                }*/
             }
             catch(Exception ex)
             {
@@ -742,6 +749,8 @@ namespace Program__16_Forms
                 label2.Text = "Y";
                 label3.Text = "W";
                 label4.Text = "H";
+                i = 0;
+                count = 1;
                 textBox1.Enabled = true;
                 textBox2.Enabled = true;
                 textBox3.Enabled = true;
@@ -763,6 +772,8 @@ namespace Program__16_Forms
                 label1.Text = "X";
                 label2.Text = "Y";
                 label3.Text = "W";
+                i = 0;
+                count = 1;
                 textBox1.Enabled = true;
                 textBox2.Enabled = true;
                 textBox3.Enabled = true;
@@ -785,6 +796,8 @@ namespace Program__16_Forms
                 label2.Text = "Y";
                 label3.Text = "W";
                 label4.Text = "H";
+                i = 0;
+                count = 1;
                 textBox1.Enabled = true;
                 textBox2.Enabled = true;
                 textBox3.Enabled = true;
@@ -806,6 +819,8 @@ namespace Program__16_Forms
                 label1.Text = "X";
                 label2.Text = "Y";
                 label3.Text = "R";
+                i = 0;
+                count = 1;
                 textBox1.Enabled = true;
                 textBox2.Enabled = true;
                 textBox3.Enabled = true;
@@ -826,6 +841,8 @@ namespace Program__16_Forms
                 triag = true;
 
                 label1.Text = "Введите количество точек:";
+                i = 0;
+                count = 1;
                 label2.Text = "X";
                 label3.Text = "Y";
                 textBox1.Enabled = true;
@@ -837,6 +854,8 @@ namespace Program__16_Forms
                 label5.Visible = false;
                 label4.Visible = false;
                 textBox4.Visible = false;
+                textBox2.Text = "";
+                textBox3.Text = "";
             }
             if (comboBox1.SelectedIndex == 5)
             {
@@ -844,6 +863,8 @@ namespace Program__16_Forms
                 
                 label5.Text = "Кол-во точек: 3";
                 label1.Text = $"Введите координаты {count}-й точки: ";
+                i = 0;
+                count = 1;
                 textBox1.Text = "3";
                 label2.Text = "X";
                 label3.Text = "Y";
@@ -855,6 +876,8 @@ namespace Program__16_Forms
                 label5.Visible = true;
                 label4.Visible = false;
                 textBox4.Visible = false;
+                textBox2.Text = "";
+                textBox3.Text = "";
             }
             if (comboBox1.SelectedIndex == 6)
             {
@@ -864,6 +887,8 @@ namespace Program__16_Forms
                 label2.Text = "Y";
                 label3.Text = "W";
                 label4.Text = "H";
+                i = 0;
+                count = 1;
                 textBox1.Enabled = true;
                 textBox2.Enabled = true;
                 textBox3.Enabled = true;

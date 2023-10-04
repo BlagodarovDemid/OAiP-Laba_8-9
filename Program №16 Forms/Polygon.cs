@@ -59,7 +59,7 @@ namespace Program__16_Forms
                 Init.pictureBox.Image = Init.bitmap;
             }
 
-            public override void MoveTo(int x, int y)
+            public override void MoveTo(int x, int y, string name)
             {
             bool mnog = false;
                 try
@@ -118,7 +118,7 @@ namespace Program__16_Forms
             Init.pictureBox.Image = Init.bitmap;
         }
         
-        public override void MoveTo(int x, int y)
+        public override void MoveTo(int x, int y, string name)
         {
             bool mnog = false;
             try
